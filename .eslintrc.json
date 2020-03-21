@@ -1,17 +1,15 @@
 {
     "env": {
         "browser": true,
-        "es6": true
+        "es6": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
-        "react-app",
-        "plugin:jsx-a11y/recommended"
+        "plugin:react/recommended",
+        "airbnb"
     ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -20,9 +18,63 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react",
-        "jsx-a11y"
+        "react"
     ],
     "rules": {
+        "indent": ["error", "tab"],
+        "no-tabs": "off",
+        "react/jsx-indent-props": [
+            "error",
+            "tab"
+        ],
+        "react/jsx-one-expression-per-line": "off",
+        "react/jsx-indent": [
+            "error",
+            "tab"
+        ],
+        "react/prop-types": 0,
+        "prefer-destructuring": [
+            "error",
+            {
+                "object": false,
+                "array": false
+            }
+        ],
+        "import/prefer-default-export": "off",
+        "import/no-named-as-default": 0,
+        "import/no-named-as-default-member": 0,
+        "import/no-cycle": 0,
+        "no-param-reassign": 0,
+        "jsx-a11y/label-has-associated-control": "off",
+        "jsx-a11y/label-has-for": "off",
+        "jsx-a11y/no-noninteractive-element-interactions": 0,
+        "guard-for-in": "off",
+        "no-restricted-syntax": "off",
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "react/jsx-uses-vars": "error",
+        "react/jsx-uses-react": 1,
+        "react/jsx-filename-extension": [1, {"extensions": [".js", ".jsx"]}],
+        "react/jsx-props-no-spreading": "off",
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "**/*.test.js",
+                    "**/*.test.jsx",
+                    "**/*.enzyme.js"
+                ]
+            }
+        ]
     }
 }
