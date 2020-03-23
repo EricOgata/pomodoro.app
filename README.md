@@ -11,7 +11,7 @@ yarn install
 ```
 
 ## User History:
-This project is being made using this repo as user history (Pomodoro Clock)[https://github.com/florinpop17/app-ideas/blob/master/Projects/1-Beginner/Pomodoro-Clock.md]
+This project is being made using this repo as user history [Pomodoro Clock](https://github.com/florinpop17/app-ideas/blob/master/Projects/1-Beginner/Pomodoro-Clock.md)
 
 ## Used Technologies:
 - React
@@ -19,3 +19,6 @@ This project is being made using this repo as user history (Pomodoro Clock)[http
 
 ## Contributing
 This is a private project
+
+## Utils
+- [Making setInterval Declarative with reactHooks](https://overreacted.io/making-setinterval-declarative-with-react-hooks/)

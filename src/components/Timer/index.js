@@ -1,21 +1,32 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Moment from 'moment';
 import useInterval from './hooks/useInterval';
 
 const Timer = () => {
+	const [isWorkingSession, setIsWorkingSession] = useState(true);
 	const [timer, setTimer] = useState(Moment.duration(25, 'minutes'));
 	const [clock, setClock] = useState({
 		minutes: '',
 		seconds: '',
 	});
 
+	function updateTimerValue (minutes, seconds) {
+		setClock({
+			minutes, seconds
+		})
+	}
+
 	useInterval(() => {
-		if (timer.asSeconds() - 1 >= 0) {
+		updateTimerValue(timer.minutes().toString(), timer.seconds().toString());
+		if (timer.asSeconds() > 0) {
 			setTimer(timer.subtract(1, 'seconds'));
-			setClock({
-				minutes: timer.minutes().toString(),
-				seconds: timer.seconds().toString(),
-			});
+		} else {
+			if (isWorkingSession) {
+				setTimer(Moment.duration(5, 'minutes'))
+			} else {
+				setTimer(Moment.duration(25, 'minutes'))
+			}
+			setIsWorkingSession(!isWorkingSession);
 		}
 	}, 1000);
 
