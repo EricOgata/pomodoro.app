@@ -1,38 +1,52 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Moment from 'moment';
 import useInterval from './hooks/useInterval';
+import { TimerContext, SessionContants } from '../app';
 
 const Timer = () => {
-	const [isWorkingSession, setIsWorkingSession] = useState(true);
-	const [timer, setTimer] = useState(Moment.duration(25, 'minutes'));
+	const {
+		session,
+		timer,
+	} = useContext(TimerContext);
+
 	const [clock, setClock] = useState({
-		minutes: '',
-		seconds: '',
+		minutes: timer.remainingTime.minutes().toString(),
+		seconds: timer.remainingTime.seconds().toString(),
 	});
 
-	function updateTimerValue (minutes, seconds) {
+	useEffect(() => {
+		updateTimerValue(timer.remainingTime.minutes().toString(), timer.remainingTime.seconds().toString());
+	}, [timer])
+
+	function updateTimerValue(minutes, seconds) {
 		setClock({
-			minutes, seconds
-		})
+			minutes, seconds,
+		});
+	}
+
+	function tickClock() {
+		if (timer.remainingTime.asSeconds() > 0) {
+			timer.setRemainingTime(timer.remainingTime.subtract(1, 'seconds'));
+		} else {
+			if (session.sessionType === SessionContants.WORKING_SESSION) {
+				timer.setRemainingTime(Moment.duration(5, 'minutes'));
+				session.setSessionType(SessionContants.RESTING_SESSION);
+			} else {
+				timer.setRemainingTime(Moment.duration(25, 'minutes'));
+				session.setSessionType(SessionContants.WORKING_SESSION);
+			}
+		}
+		updateTimerValue(timer.remainingTime.minutes().toString(), timer.remainingTime.seconds().toString());
 	}
 
 	useInterval(() => {
-		updateTimerValue(timer.minutes().toString(), timer.seconds().toString());
-		if (timer.asSeconds() > 0) {
-			setTimer(timer.subtract(1, 'seconds'));
-		} else {
-			if (isWorkingSession) {
-				setTimer(Moment.duration(5, 'minutes'))
-			} else {
-				setTimer(Moment.duration(25, 'minutes'))
-			}
-			setIsWorkingSession(!isWorkingSession);
+		if (timer.isRunning) {
+			tickClock();
 		}
 	}, 1000);
 
 	return (
 		<>
-			<h1>Timer</h1>
 			<h2>{`${clock.minutes}:${clock.seconds}`}</h2>
 		</>
 	);
