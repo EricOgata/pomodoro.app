@@ -1,0 +1,15 @@
+name: Run ESLint on PULL REQUESTS
+
+on: [push]
+
+jobs:
+  lint:
+    name: Run linters
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '13.x'
+      - run: yarn
+      - run: yarn lint
