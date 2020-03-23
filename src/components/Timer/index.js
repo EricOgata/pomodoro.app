@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Moment from 'moment';
 import useInterval from './hooks/useInterval';
 import { TimerContext, SessionContants } from '../app';
@@ -14,10 +14,6 @@ const Timer = () => {
 		seconds: timer.remainingTime.seconds().toString(),
 	});
 
-	useEffect(() => {
-		updateTimerValue(timer.remainingTime.minutes().toString(), timer.remainingTime.seconds().toString());
-	}, [timer])
-
 	function updateTimerValue(minutes, seconds) {
 		setClock({
 			minutes, seconds,
@@ -27,17 +23,26 @@ const Timer = () => {
 	function tickClock() {
 		if (timer.remainingTime.asSeconds() > 0) {
 			timer.setRemainingTime(timer.remainingTime.subtract(1, 'seconds'));
+		} else if (session.sessionType === SessionContants.WORKING_SESSION) {
+			timer.setRemainingTime(Moment.duration(5, 'minutes'));
+			session.setSessionType(SessionContants.RESTING_SESSION);
 		} else {
-			if (session.sessionType === SessionContants.WORKING_SESSION) {
-				timer.setRemainingTime(Moment.duration(5, 'minutes'));
-				session.setSessionType(SessionContants.RESTING_SESSION);
-			} else {
-				timer.setRemainingTime(Moment.duration(25, 'minutes'));
-				session.setSessionType(SessionContants.WORKING_SESSION);
-			}
+			timer.setRemainingTime(Moment.duration(25, 'minutes'));
+			session.setSessionType(SessionContants.WORKING_SESSION);
 		}
-		updateTimerValue(timer.remainingTime.minutes().toString(), timer.remainingTime.seconds().toString());
+		updateTimerValue(
+			timer.remainingTime.minutes().toString(),
+			timer.remainingTime.seconds().toString(),
+		);
 	}
+
+	// Hooks
+	useEffect(() => {
+		updateTimerValue(
+			timer.remainingTime.minutes().toString(),
+			timer.remainingTime.seconds().toString(),
+		);
+	}, [timer]);
 
 	useInterval(() => {
 		if (timer.isRunning) {
