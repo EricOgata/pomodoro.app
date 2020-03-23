@@ -1,7 +1,10 @@
-name: Run ESLint on PULL REQUESTS
+name: Run ESLint on PUSH
 
-on: [push]
-
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
 jobs:
   lint:
     name: Run linters

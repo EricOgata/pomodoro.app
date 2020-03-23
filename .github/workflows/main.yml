@@ -17,6 +17,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Packages
         run: yarn install
+      - name: Validate Code
+        run: yarn lint --ext .js --ext .jsx .
       - name: Build Page
         run: yarn build
       - name: Deploy to GH-Pages
