@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Moment from "moment";
+import Moment from 'moment';
 
 import './App.css';
 
@@ -9,25 +9,25 @@ import Label from '../Label';
 
 export const TimerContext = React.createContext(null);
 export const SessionContants = {
-	WORKING_SESSION : 'WORKING_SESSION',
-	RESTING_SESSION : 'RESTING_SESSION',
-	LONG_RESTING_SESSION : 'LONG_RESTING_SESSION',
-}
+	WORKING_SESSION: 'WORKING_SESSION',
+	RESTING_SESSION: 'RESTING_SESSION',
+	LONG_RESTING_SESSION: 'LONG_RESTING_SESSION',
+};
 
 const Index = () => {
 	const [sessionType, setSessionType] = useState(SessionContants.WORKING_SESSION);
 	const [isRunning, setIsRunning] = useState(false);
 	const [remainingTime, setRemainingTime] = useState(Moment.duration(25, 'minutes'));
 
+	const restartSession = () => {
+		const duration = sessionType === SessionContants.WORKING_SESSION ? 25 : 5;
+		setRemainingTime(Moment.duration(duration, 'minutes'));
+	};
+
 	const stopSession = () => {
 		setIsRunning(false);
 		restartSession();
-	}
-
-	const restartSession = () => {
-		const duration = sessionType === SessionContants.WORKING_SESSION ? 25 : 5;
-		setRemainingTime(Moment.duration(duration, 'minutes'))
-	}
+	};
 
 	return (
 		<div className="App">
@@ -44,7 +44,7 @@ const Index = () => {
 							setRemainingTime,
 							isRunning,
 							setIsRunning,
-						}
+						},
 					}}
 				>
 					<Timer />
