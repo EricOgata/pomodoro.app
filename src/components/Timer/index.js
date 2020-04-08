@@ -45,7 +45,7 @@ const Timer = () => {
 	}, 1000);
 
 	useEffect(() => {
-		document.title = timer.remainingTime.format();
+		document.title = clock;
 	}, [clock]);
 
 	return (
