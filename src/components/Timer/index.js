@@ -1,47 +1,41 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Moment from 'moment';
+import UIFx from 'uifx';
 import useInterval from './hooks/useInterval';
+import bellAudio from '../../sounds/bells.mp3';
 import { TimerContext, SessionContants } from '../app';
 
 const Timer = () => {
 	const {
 		session,
 		timer,
+		actions,
 	} = useContext(TimerContext);
 
-	const [clock, setClock] = useState({
-		minutes: timer.remainingTime.minutes().toString(),
-		seconds: timer.remainingTime.seconds().toString(),
-	});
+	const [clock, setClock] = useState(timer.remainingTime.format());
 
-	function updateTimerValue(minutes, seconds) {
-		setClock({
-			minutes, seconds,
-		});
-	}
+	const bellSound = new UIFx(bellAudio, { volume: 1, throttleMs: 100 });
 
-	function tickClock() {
-		if (timer.remainingTime.asSeconds() > 0) {
-			timer.setRemainingTime(timer.remainingTime.subtract(1, 'seconds'));
-		} else if (session.sessionType === SessionContants.WORKING_SESSION) {
-			timer.setRemainingTime(Moment.duration(5, 'minutes'));
-			session.setSessionType(SessionContants.RESTING_SESSION);
+	const updateTimerValue = (formatedTime) => {
+		setClock(formatedTime);
+	};
+
+	const tickClock = () => {
+		if (timer.remainingTime.asSeconds() > 1) {
+			actions.tick();
 		} else {
-			timer.setRemainingTime(Moment.duration(25, 'minutes'));
-			session.setSessionType(SessionContants.WORKING_SESSION);
+			bellSound.play();
+			if (session.sessionType === SessionContants.WORKING_SESSION) {
+				actions.startNewSession(SessionContants.RESTING_SESSION);
+			} else {
+				actions.startNewSession(SessionContants.WORKING_SESSION);
+			}
 		}
-		updateTimerValue(
-			timer.remainingTime.minutes().toString(),
-			timer.remainingTime.seconds().toString(),
-		);
-	}
+		updateTimerValue(timer.remainingTime.format());
+	};
 
 	// Hooks
 	useEffect(() => {
-		updateTimerValue(
-			timer.remainingTime.minutes().toString(),
-			timer.remainingTime.seconds().toString(),
-		);
+		updateTimerValue(timer.remainingTime.format());
 	}, [timer]);
 
 	useInterval(() => {
@@ -50,9 +44,13 @@ const Timer = () => {
 		}
 	}, 1000);
 
+	useEffect(() => {
+		document.title = timer.remainingTime.format();
+	}, [clock]);
+
 	return (
 		<>
-			<h2>{`${clock.minutes}:${clock.seconds}`}</h2>
+			<h2>{`${clock}`}</h2>
 		</>
 	);
 };
