@@ -16,6 +16,7 @@ This project is being made using this repo as user history [Pomodoro Clock](http
 ## Used Technologies:
 - React
 - Styled-Components
+- MomenJS
 
 ## Contributing
 This is a private project
